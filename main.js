@@ -1,4 +1,5 @@
 // Create our 'main' state that will contain the game
+var isPressed = false;
 var mainState = {
     preload: function() { 
         game.load.image('bird', 'assets/xqcE.png');
@@ -60,6 +61,7 @@ var mainState = {
 			},
 			
 		jump: function() {
+			isPressed = true;
 			if (this.bird.alive == false)
 			return;  
 			// Add a vertical velocity to the bird
@@ -93,8 +95,12 @@ var mainState = {
 		// Restart the game
 		restartGame: function() {
 				// Start the 'main' state, which restarts the game
-				this.go_agane.play();
+				
 				game.state.start('main');
+				if(isPressed)
+				{
+					this.go_agane.play();
+				}
 		},
 		
 		addOnePipe: function(x, y) {
@@ -158,8 +164,11 @@ game.state.add('main', mainState);
 // Start the state to actually start the game
 game.state.start('main');
 
-if (game.sound.usingWebAudio &&
-    game.sound.context.state === 'suspended')
-{
-  game.input.onTap.addOnce(game.sound.context.resume, game.sound.context);
+if(typeof AudioContext != "undefined" || typeof webkitAudioContext != "undefined") {
+   var resumeAudio = function() {
+      if(typeof g_WebAudioContext == "undefined" || g_WebAudioContext == null) return;
+      if(g_WebAudioContext.state == "suspended") g_WebAudioContext.resume();
+      document.removeEventListener("click", resumeAudio);
+   };
+   document.addEventListener("click", resumeAudio);
 }
