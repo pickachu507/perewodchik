@@ -67,7 +67,7 @@ var mainState = {
 			// Create an animation on the bird
 			var animation = game.add.tween(this.bird);
 
-			// Change the angle of the bird to -20° in 100 milliseconds
+			// Change the angle of the bird to -20Â° in 100 milliseconds
 			animation.to({angle: -20}, 100);
 
 			// And start the animation
@@ -158,3 +158,8 @@ game.state.add('main', mainState);
 // Start the state to actually start the game
 game.state.start('main');
 
+if (game.sound.usingWebAudio &&
+    game.sound.context.state === 'suspended')
+{
+  game.input.onTap.addOnce(game.sound.context.resume, game.sound.context);
+}
